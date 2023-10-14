@@ -16,36 +16,40 @@ emotion_model.load_weights("C:\\Users\\Shree Hari\\Desktop\\Emotion_detection_wi
 print("Loaded model from disk")
 
 # start the webcam feed
-cap = cv2.VideoCapture(0)
+cap = cv2.imread("D:\\Downloads\\thejas_happy.jpeg")
+
+store_emotes={ 'Thejas':None, 'Hari': None, 'Shishir' : None ,'Vikas' : None}
 
 
-
-while True:
+for i in range(1):
     # Find haar cascade to draw bounding box around face
-    ret, frame = cap.read()
-    frame = cv2.resize(frame, (1280, 720))
-    if not ret:
-        break
-    face_detector = cv2.CascadeClassifier('C:\\Users\\Shree Hari\\Desktop\\Emotion_detection_with_CNN\\Emotion_detection_with_CNN-main\\haarcascades\\haarcascade_frontalface_default.xml')
-    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    # ret, frame = cap.read()
+        frame = cv2.resize(cap, (1280, 720))
+    # if not ret:
+    #     break
+    # face_detector = cv2.CascadeClassifier('C:\\Users\\Shree Hari\\Desktop\\Emotion_detection_with_CNN\\Emotion_detection_with_CNN-main\\haarcascades\\haarcascade_frontalface_default.xml')
+        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    # detect faces available on camera
-    num_faces = face_detector.detectMultiScale(gray_frame, scaleFactor=1.3, minNeighbors=5)
+    # # detect faces available on camera
+    # num_faces = face_detector.detectMultiScale(gray_frame, scaleFactor=1.3, minNeighbors=5)
 
     # take each face available on the camera and Preprocess it
-    for (x, y, w, h) in num_faces:
-        cv2.rectangle(frame, (x, y-50), (x+w, y+h+10), (0, 255, 0), 4)
-        roi_gray_frame = gray_frame[y:y + h, x:x + w]
-        cropped_img = np.expand_dims(np.expand_dims(cv2.resize(roi_gray_frame, (48, 48)), -1), 0)
+    # for (x, y, w, h) in num_faces:
+        #cv2.rectangle(frame, (x, y-50), (x+w, y+h+10), (0, 255, 0), 4)
+        #roi_gray_frame = gray_frame[y:y + h, x:x + w]
+        cropped_img = np.expand_dims(np.expand_dims(cv2.resize(gray_frame, (48, 48)), -1), 0)
 
         # predict the emotions
         emotion_prediction = emotion_model.predict(cropped_img)
         maxindex = int(np.argmax(emotion_prediction))
-        cv2.putText(frame, emotion_dict[maxindex], (x+5, y-20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
+        print(emotion_dict[maxindex])
 
-    cv2.imshow('Emotion Detection', frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+        #cv2.putText(frame, emotion_dict[maxindex], (x+5, y-20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
 
-cap.release()
+    # cv2.imshow('Emotion Detection', frame)
+    # if cv2.waitKey(1) & 0xFF == ord('q'):
+    #     break
+
+#cap.release()
 cv2.destroyAllWindows()
+

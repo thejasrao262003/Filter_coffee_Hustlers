@@ -13,6 +13,10 @@ frame_count = 0
 running = True
 while running:
     ret, frame = cap.read()
+    if not ret:
+        running= False
+        print("Stream Broken")
+        break
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = face_detector(gray)
 
